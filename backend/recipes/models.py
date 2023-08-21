@@ -127,3 +127,25 @@ class RecipeIngredient(models.Model):
             f'{self.ingredient.name} :: {self.ingredient.quantity}'
             f' - {self.unit} '
         )
+
+
+class Favorites(models.Model):
+    """Модель избранного."""
+    recipe = models.ForeignKey(
+        verbose_name="Избранный рецепт",
+        to=Recipe,
+        on_delete=models.CASCADE
+    )
+    user = models.ForeignKey(
+        verbose_name="Пользователь",
+        to=User,
+        on_delete=models.CASCADE
+    )
+    date_added = models.DateTimeField(
+        verbose_name="Дата добавления",
+        auto_now_add=True,
+        editable=False
+    )
+
+    def __str__(self) -> str:
+        return f"{self.user} -> {self.recipe}"
