@@ -1,0 +1,12 @@
+Django==4.2.4
+djangorestframework==3.14.0
+mixer==7.2.2
+Pillow==10.0.0
+requests==2.31.0
+six==1.16.0
+sorl-thumbnail==12.7.0
+Faker==12.0.1
+gunicorn==20.0.4
+djoser==2.2.0
+django-filter==23.2
+psycopg2==2.9.7
