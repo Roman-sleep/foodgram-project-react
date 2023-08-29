@@ -18,9 +18,9 @@ class IngredientAdmin(admin.ModelAdmin):
 
 
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('author', 'name', 'cooking_time')
-    search_fields = ('name', 'author', 'tags')
-    list_filter = ('author', 'name', 'tags')
+    list_display = ('author', 'title', 'cooking_time')
+    search_fields = ('author', 'title', 'tags')
+    list_filter = ('author', 'title', 'tags')
 
 
 class FavoritesAdmin(admin.ModelAdmin):
