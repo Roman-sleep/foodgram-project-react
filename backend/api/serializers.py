@@ -4,6 +4,7 @@ from recipes.models import (Tag, Ingredient, Recipe,
 from users.models import User
 from rest_framework.serializers import SerializerMethodField
 from rest_framework.exceptions import ValidationError
+from drf_extra_fields.fields import Base64ImageField
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -76,11 +77,12 @@ class RecipeSerializer(serializers.ModelSerializer):
     ingredients = SerializerMethodField()
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
+    image = Base64ImageField(max_length=None)
 
     class Meta:
         model = Recipe
         fields = ('id', 'tags', 'autor', 'ingredients', 'title', 'image',
-                  'cooking_time', 'is_favorited', 'is_in_shopping_cart', 
+                  'cooking_time', 'is_favorited', 'is_in_shopping_cart',
                   'description')
 
     def get_ingredients(self, obj):
