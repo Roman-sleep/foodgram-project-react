@@ -1,23 +1,21 @@
-from djoser.views import UserViewSet
-from rest_framework import status, viewsets
-from rest_framework.decorators import action
-from django.shortcuts import get_object_or_404
-from rest_framework.response import Response
 from django.db.models import Sum
 from django.http.response import HttpResponse
-from rest_framework.permissions import (IsAuthenticatedOrReadOnly,
-                                        IsAuthenticated)
-
-from recipes.models import (Tag, Ingredient, Recipe, RecipeIngredient,
-                            Favorites, ShoppingList)
-
-from users.models import User, Follow
+from django.shortcuts import get_object_or_404
+from djoser.views import UserViewSet
+from recipes.models import (Favorites, Ingredient, Recipe, RecipeIngredient,
+                            ShoppingList, Tag)
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
+from rest_framework.response import Response
+from users.models import Follow, User
 
 from .pagination import CustomPagination
 from .permissions import AuthorPermission
-from .serializers import (TagSerializer, IngredientSerializer,
-                          RecipeSerializer, UserSerializer,
-                          ShoppingListSerializer, FavoritesSerializer)
+from .serializers import (FavoritesSerializer, IngredientSerializer,
+                          RecipeSerializer, ShoppingListSerializer,
+                          TagSerializer, UserSerializer)
 
 
 class TagViewSet(viewsets.ModelViewSet):

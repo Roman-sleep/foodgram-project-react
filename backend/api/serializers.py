@@ -1,10 +1,10 @@
-from rest_framework import serializers
-from recipes.models import (Tag, Ingredient, Recipe,
-                            Favorites, ShoppingList, RecipeIngredient)
-from users.models import User
-from rest_framework.serializers import SerializerMethodField
-from rest_framework.exceptions import ValidationError
 from drf_extra_fields.fields import Base64ImageField
+from recipes.models import (Favorites, Ingredient, Recipe, RecipeIngredient,
+                            ShoppingList, Tag)
+from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from rest_framework.serializers import SerializerMethodField
+from users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -21,10 +21,8 @@ class UserSerializer(serializers.ModelSerializer):
 
         user = self.context.get("request").user
 
-        if user.is_anonymous or (user == obj):
-            return False
-
-        return user.subscriptions.filter(author=obj).exists()
+        return user.is_authenticated and \
+            user.subscriptions.filter(author=obj).exists()
 
     def create(self, validated_data):
         '''Создание нового User.'''
