@@ -89,7 +89,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @shopping_cart.mapping.delete
     def destroy_shopping_cart(self, request, pk):
-        '''удаляет рецепт из списка покупок.'''
+        '''Yдаляет рецепт из списка покупок.'''
         get_object_or_404(
             ShoppingList,
             user=request.user.id,
