@@ -13,14 +13,13 @@ class TagAdmin(admin.ModelAdmin):
 class IngredientAdmin(admin.ModelAdmin):
     """Управление ингридиентами в админ панели."""
     list_display = ('name', 'quantity')
-    search_fields = ('name', )
-    list_filter = ('name', )
+    search_fields = ('name')
 
 
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('author', 'title', 'cooking_time')
-    search_fields = ('author', 'title', 'tags')
-    list_filter = ('author', 'title', 'tags')
+    search_fields = ('author', 'title', 'tags__name')
+    list_filter = ('tags')
 
 
 class FavoritesAdmin(admin.ModelAdmin):

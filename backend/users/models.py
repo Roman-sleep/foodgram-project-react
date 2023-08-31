@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import F, Q, UniqueConstraint
+from django.conf import settings
 
 
 class User(models.Model):
@@ -7,11 +8,11 @@ class User(models.Model):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
     first_name = models.CharField(
-        max_length=255,
+        max_length=settings.MAX_LENGTH255,
         verbose_name='Имя'
     )
     last_name = models.CharField(
-        max_length=255,
+        max_length=settings.AX_LENGTH255,
         verbose_name='Фамилия'
     )
     email = models.EmailField(
@@ -19,7 +20,7 @@ class User(models.Model):
         verbose_name='Почта'
     )
     username = models.CharField(
-        max_length=255,
+        max_length=settings.MAX_LENGTH255,
         unique=True,
         verbose_name='Никнэйм'
     )

@@ -1,16 +1,17 @@
 from django.db import models
 from users.models import User
+from django.conf import settings
 
 
 class Tag(models.Model):
     '''Модэль тэга.'''
     name = models.CharField(
-        max_length=255,
+        max_length=settings.MAX_LENGTH255,
         unique=True,
         verbose_name='Название тэга'
     )
     color_code = models.CharField(
-        max_length=7,
+        max_length=settings.MAX_LENGTH7,
         verbose_name='Цветовой код'
     )
     slug = models.SlugField(
@@ -28,7 +29,7 @@ class Tag(models.Model):
 class Ingredient(models.Model):
     '''Модэль ингридиента.'''
     name = models.CharField(
-        max_length=255,
+        max_length=settings.MAX_LENGTH255,
         verbose_name='Название ингридиента'
     )
     quantity = models.DecimalField(
@@ -37,7 +38,7 @@ class Ingredient(models.Model):
         verbose_name='Единици измерения'
     )
     unit = models.CharField(
-        max_length=50,
+        max_length=settings.MAX_LENGTH50,
         verbose_name='Количество'
     )
 
@@ -62,7 +63,7 @@ class Recipe(models.Model):
         verbose_name='Автор рецепта'
     )
     title = models.CharField(
-        max_length=255,
+        max_length=settings.MAX_LENGTH255,
         verbose_name='Название рецепта'
     )
     image = models.ImageField(
@@ -115,7 +116,7 @@ class RecipeIngredient(models.Model):
         verbose_name='Единици измерения'
     )
     unit = models.CharField(
-        max_length=50,
+        max_length=settings.MAX_LENGTH50,
         verbose_name='Количество'
     )
 
