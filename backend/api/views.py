@@ -5,6 +5,7 @@ from djoser.views import UserViewSet
 from recipes.models import (Favorites, Ingredient, Recipe, RecipeIngredient,
                             ShoppingList, Tag)
 from rest_framework import status, viewsets
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import action
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
@@ -43,7 +44,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @staticmethod
     def send_message(ingredients):
-        '''Fормирует текстовый файл с покупками/'''
+        '''Fормирует текстовый файл с покупками.'''
         shopping_list = 'Купить в магазине:'
         for ingredient in ingredients:
             shopping_list += (
@@ -57,7 +58,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['GET'])
     def download_shopping_cart(self, request):
-        '''Zагрузкa списка покупок/'''
+        '''Zагрузкa списка покупок.'''
         ingredients = RecipeIngredient.objects.filter(
             recipe__shopping_list__user=request.user
         ).order_by('ingredient__name').values(
@@ -65,22 +66,26 @@ class RecipeViewSet(viewsets.ModelViewSet):
         ).annotate(amount=Sum('amount'))
         return self.send_message(ingredients)
 
+    @staticmethod
+    def add_to_list(request, recipe, serializer_class):
+        context = {'request': request}
+        data = {
+            'user': request.user.id,
+            'recipe': recipe.id
+        }
+        serializer = serializer_class(data=data, context=context)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     @action(
         detail=True,
         methods=('POST',),
         permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk):
         '''Dобавляет рецепт в список покупок.'''
-        context = {'request': request}
         recipe = get_object_or_404(Recipe, id=pk)
-        data = {
-            'user': request.user.id,
-            'recipe': recipe.id
-        }
-        serializer = ShoppingListSerializer(data=data, context=context)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return self.add_to_list(request, recipe, ShoppingListSerializer)
 
     @shopping_cart.mapping.delete
     def destroy_shopping_cart(self, request, pk):
@@ -98,16 +103,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated])
     def favorite(self, request, pk):
         '''Dобавляет рецепт в избранное.'''
-        context = {"request": request}
         recipe = get_object_or_404(Recipe, id=pk)
-        data = {
-            'user': request.user.id,
-            'recipe': recipe.id
-        }
-        serializer = FavoritesSerializer(data=data, context=context)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return self.add_to_list(request, recipe, FavoritesSerializer)
 
     @favorite.mapping.delete
     def destroy_favorite(self, request, pk):
@@ -137,26 +134,30 @@ class UserViewSet(UserViewSet):
         author = get_object_or_404(User, pk=id)
 
         if request.method == 'POST':
-            serializer = ShoppingListSerializer(
-                author, data=request.data, context={'request': request}
-            )
+            if Follow.objects.filter(user=user, author=author).exists():
+                raise PermissionDenied('Вы уже подписаны на этого автора')
+
+            serializer = UserSerializer(author, context={'request': request})
             serializer.is_valid(raise_exception=True)
             Follow.objects.create(user=user, author=author)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if request.method == 'DELETE':
             get_object_or_404(
                 Follow, user=user, author=author
             ).delete()
+
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, permission_classes=[IsAuthenticated])
     def subscriptions(self, request):
-        '''Для списка покупок.'''
+        '''Для списка подписок.'''
         user = request.user
         queryset = User.objects.filter(following__user=user)
         pages = self.paginate_queryset(queryset)
-        serializer = ShoppingListSerializer(
+        serializer = UserSerializer(
             pages, many=True, context={'request': request}
         )
+
         return self.get_paginated_response(serializer.data)
