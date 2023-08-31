@@ -4,6 +4,8 @@ from django.db.models import F, Q, UniqueConstraint
 
 class User(models.Model):
     """ Модель пользователя. """
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
     first_name = models.CharField(
         max_length=255,
         verbose_name='Имя'
@@ -30,6 +32,7 @@ class User(models.Model):
 
 
 class Follow(models.Model):
+
     """ Модель подписки на автора. """
     author = models.ForeignKey(
         User,
@@ -56,6 +59,7 @@ class Follow(models.Model):
             )
         ]
         verbose_name = 'Подписка'
+        ordering = ['-id']
 
-    def __str__(self) -> str:
+    def str(self) -> str:
         return f"{self.user} подписан на {self.author}"
