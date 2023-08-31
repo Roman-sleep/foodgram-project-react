@@ -20,6 +20,7 @@ filetype==1.2.0
 gunicorn==21.2.0
 idna==3.4
 iniconfig==2.0.0
+isort==5.12.0
 mixer==7.2.2
 oauthlib==3.2.2
 packaging==23.1
