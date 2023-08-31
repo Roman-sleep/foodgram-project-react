@@ -6,12 +6,12 @@ from users.models import User
 class Tag(models.Model):
     '''Модэль тэга.'''
     name = models.CharField(
-        max_length=settings.MAX_LENGTH255,
+        max_length=settings.MAX_LENGTH_255,
         unique=True,
         verbose_name='Название тэга'
     )
     color_code = models.CharField(
-        max_length=settings.MAX_LENGTH7,
+        max_length=settings.MAX_LENGTH_7,
         verbose_name='Цветовой код'
     )
     slug = models.SlugField(
@@ -29,7 +29,7 @@ class Tag(models.Model):
 class Ingredient(models.Model):
     '''Модэль ингридиента.'''
     name = models.CharField(
-        max_length=settings.MAX_LENGTH255,
+        max_length=settings.MAX_LENGTH_255,
         verbose_name='Название ингридиента'
     )
     quantity = models.DecimalField(
@@ -38,7 +38,7 @@ class Ingredient(models.Model):
         verbose_name='Единици измерения'
     )
     unit = models.CharField(
-        max_length=settings.MAX_LENGTH50,
+        max_length=settings.MAX_LENGTH_50,
         verbose_name='Количество'
     )
 
@@ -63,7 +63,7 @@ class Recipe(models.Model):
         verbose_name='Автор рецепта'
     )
     title = models.CharField(
-        max_length=settings.MAX_LENGTH255,
+        max_length=settings.MAX_LENGTH_255,
         verbose_name='Название рецепта'
     )
     image = models.ImageField(
@@ -116,7 +116,7 @@ class RecipeIngredient(models.Model):
         verbose_name='Единици измерения'
     )
     unit = models.CharField(
-        max_length=settings.MAX_LENGTH50,
+        max_length=settings.MAX_LENGTH_50,
         verbose_name='Количество'
     )
 
