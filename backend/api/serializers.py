@@ -53,7 +53,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
-    ''' Сериализатор связи ингридиентов и рецепта/'''
+    ''' Сериализатор связи ингредиентов и рецепта. '''
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all()
     )
@@ -61,10 +61,11 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
     measurement_unit = serializers.ReadOnlyField(
         source='ingredient.measurement_unit'
     )
+    unit = serializers.IntegerField(min_value=1)
 
     class Meta:
         model = RecipeIngredient
-        fields = ('id', 'name', 'measurement_unit', 'amount',)
+        fields = ('id', 'name', 'measurement_unit', 'unit',)
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -76,6 +77,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
     image = Base64ImageField(max_length=None)
+    cooking_time = serializers.IntegerField()
 
     class Meta:
         model = Recipe
@@ -87,6 +89,12 @@ class RecipeSerializer(serializers.ModelSerializer):
         '''Cписок ингридиентов для рецепта.'''
         ingredients = RecipeIngredient.objects.filter(recipe=obj)
         return RecipeIngredientSerializer(ingredients, many=True).data
+
+    def validate_cooking_time(self, cooking_time):
+        if cooking_time < 1:
+            raise serializers.ValidationError(
+                'Время готовки должно быть не меньше одной минуты')
+        return cooking_time
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')
@@ -127,11 +135,7 @@ class FavoritesSerializer(serializers.ModelSerializer):
         fields = ('user', 'recipe')
 
     def validate(self, data):
-        user = data['user']
-        if user.favorites.filter(recipe=data['recipe']).exists():
-            raise ValidationError(
-                'Рецепт уже добавлен в избранное.'
-            )
+        self.check_duplicate(data['user'], data['recipe'])
         return data
 
     def to_representation(self, instance):
@@ -139,6 +143,13 @@ class FavoritesSerializer(serializers.ModelSerializer):
             instance.recipe,
             context={'request': self.context.get('request')}
         ).data
+
+    @staticmethod
+    def check_duplicate(user, recipe):
+        if user.favorites.filter(recipe=recipe).exists():
+            raise ValidationError(
+                'Рецепт уже добавлен в избранное.'
+            )
 
 
 class ShoppingListSerializer(serializers.ModelSerializer):
@@ -148,11 +159,7 @@ class ShoppingListSerializer(serializers.ModelSerializer):
         fields = ('user', 'recipe')
 
     def validate(self, data):
-        user = data['user']
-        if user.shopping_list.filter(recipe=data['recipe']).exists():
-            raise ValidationError(
-                'Рецепт уже добавлен в корзину'
-            )
+        self.check_duplicate(data['user'], data['recipe'])
         return data
 
     def to_representation(self, instance):
@@ -160,3 +167,10 @@ class ShoppingListSerializer(serializers.ModelSerializer):
             instance.recipe,
             context={'request': self.context.get('request')}
         ).data
+
+    @staticmethod
+    def check_duplicate(user, recipe):
+        if user.shopping_list.filter(recipe=recipe).exists():
+            raise ValidationError(
+                'Рецепт уже добавлен в корзину'
+            )

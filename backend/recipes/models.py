@@ -129,7 +129,7 @@ class Recipe(models.Model):
 
 
 class RecipeIngredient(models.Model):
-    '''Модэль ингридиентов в рецепте.'''
+    ''' Модель ингредиентов в рецепте. '''
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
@@ -138,12 +138,12 @@ class RecipeIngredient(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        verbose_name='Ингридиент'
+        verbose_name='Ингредиент'
     )
     quantity = models.DecimalField(
         max_digits=settings.MAX_DIGITS_5,
         decimal_places=settings.DECIMAL_PLACES_2,
-        verbose_name='Единици измерения'
+        verbose_name='Единицы измерения'
     )
     unit = models.CharField(
         max_length=settings.MAX_LENGTH_50,
@@ -153,12 +153,12 @@ class RecipeIngredient(models.Model):
 
     class Meta:
         verbose_name = 'Ингредиент'
-        verbose_name_plural = 'Ингридиенты'
+        verbose_name_plural = 'Ингредиенты'
 
     def __str__(self):
         return (
-            f'{self.ingredient.name} :: {self.ingredient.quantity}'
-            f' - {self.unit} '
+            f'{self.ingredient.name} :: {self.quantity} '
+            f'- {self.unit}'
         )
 
 

@@ -5,8 +5,8 @@ from djoser.views import UserViewSet
 from recipes.models import (Favorites, Ingredient, Recipe, RecipeIngredient,
                             ShoppingList, Tag)
 from rest_framework import status, viewsets
-from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
@@ -143,12 +143,11 @@ class UserViewSet(UserViewSet):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        if request.method == 'DELETE':
-            get_object_or_404(
-                Follow, user=user, author=author
-            ).delete()
+        get_object_or_404(
+            Follow, user=user, author=author
+        ).delete()
 
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, permission_classes=[IsAuthenticated])
     def subscriptions(self, request):
