@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.db.models import F, Q, UniqueConstraint
+from django.utils import timezone
 
 
 class User(models.Model):
@@ -27,6 +28,7 @@ class User(models.Model):
 
     class Meta:
         verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
 
     def __str__(self):
         return self.username
@@ -47,6 +49,10 @@ class Follow(models.Model):
         verbose_name='Подписчик',
         related_name='following'
     )
+    created_at = models.DateTimeField(
+        default=timezone.now,
+        verbose_name='Дата подписки'
+    )
 
     class Meta:
         constraints = [
@@ -60,7 +66,8 @@ class Follow(models.Model):
             )
         ]
         verbose_name = 'Подписка'
-        ordering = ['-id']
+        verbose_name_plural = 'Подписки'
+        ordering = ['-created_at']
 
     def str(self) -> str:
         return f"{self.user} подписан на {self.author}"
