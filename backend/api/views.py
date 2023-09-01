@@ -10,8 +10,8 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
-from users.models import Follow, User
 
+from users.models import Follow, User
 from .pagination import CustomPagination
 from .permissions import AuthorPermission
 from .serializers import (FavoritesSerializer, IngredientSerializer,
