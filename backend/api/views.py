@@ -2,8 +2,8 @@ from django.db.models import Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
-from recipes.models import (Favorites, Ingredient, Recipe, RecipeIngredient,
-                            ShoppingList, Tag)
+from recipes.models import (Favorites, Ingredient, Recipe,
+                            RecipeIngredient, ShoppingList, Tag)
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
