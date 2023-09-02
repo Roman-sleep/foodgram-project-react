@@ -13,7 +13,7 @@ services:
     env_file: .env
 
   backend:
-    build: ./backend/
+    image: romanssleep/foodgram_backend
     depends_on:
         - db
     volumes:
@@ -22,7 +22,7 @@ services:
     env_file: .env
 
   frontend:
-    build: ./frontend/
+    image: romanssleep/foodgram_frontend
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
