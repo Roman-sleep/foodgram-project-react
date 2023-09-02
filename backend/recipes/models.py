@@ -84,8 +84,8 @@ class Recipe(models.Model):
     )
     favorites = models.ManyToManyField(
         User,
-        through='FavoriteRecipe',
-        related_name='Подписки на рецепт',
+        through='Favorites',
+        related_name='favorite_recipes',
     )
     favorites_count = models.IntegerField(
         default=0,
@@ -166,9 +166,10 @@ class RecipeIngredient(models.Model):
 class Favorites(models.Model):
     """Модель избранного."""
     recipe = models.ForeignKey(
-        verbose_name='Избранный рецепт',
+        verbose_name='Рецепт по подписке',
         to=Recipe,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='favorite_recipes'
     )
     user = models.ForeignKey(
         verbose_name='Пользователь',

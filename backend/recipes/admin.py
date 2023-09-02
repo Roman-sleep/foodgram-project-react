@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from .models import (Tag, Ingredient, Recipe,
                      Favorites, ShoppingList)
 
@@ -19,10 +18,10 @@ class IngredientAdmin(admin.ModelAdmin):
 
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('author', 'title', 'cooking_time',
-                    'favorite_count', 'ingredient_count')
+                    'favorites_count', 'ingredients_count')
     search_fields = ('author', 'title', 'tags__name',
-                     'favorite_count', 'ingredient_count')
-    list_filter = ('tags', 'favorite_count', 'ingredient_count')
+                     'favorites_count', 'ingredients_count')
+    list_filter = ('tags', 'favorites_count', 'ingredients_count')
 
 
 class FavoritesAdmin(admin.ModelAdmin):
