@@ -25,6 +25,11 @@ class User(models.Model):
         unique=True,
         verbose_name='Никнэйм'
     )
+    password = models.CharField(
+        max_length=128,
+        help_text=settings.MAX_LENGTH_255,
+        verbose_name='Пароль'
+    )
 
     class Meta:
         verbose_name = 'Пользователь'
