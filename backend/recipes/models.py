@@ -35,7 +35,7 @@ class Ingredient(models.Model):
         max_length=settings.MAX_LENGTH_255,
         verbose_name='Название ингридиента'
     )
-    measurement_unit = models.DecimalField(
+    measurement_unit = models.CharField(
         max_length=settings.MAX_LENGTH_50,
         verbose_name='Единици измерения'
     )
