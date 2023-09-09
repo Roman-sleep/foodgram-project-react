@@ -27,7 +27,7 @@ class User(models.Model):
     )
     password = models.CharField(
         max_length=128,
-        help_text=settings.MAX_LENGTH_255,
+        default='',
         verbose_name='Пароль'
     )
 

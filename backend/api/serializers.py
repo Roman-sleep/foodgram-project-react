@@ -1,7 +1,9 @@
 from drf_extra_fields.fields import Base64ImageField
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import SerializerMethodField
+
 
 from recipes.models import (
     Favorites,
@@ -15,9 +17,10 @@ from recipes.models import (
 from users.models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(UserSerializer):
     '''Сериализатор модели User.'''
     is_subscribed = SerializerMethodField()
+    password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
@@ -32,18 +35,15 @@ class UserSerializer(serializers.ModelSerializer):
         return user.is_authenticated and \
             user.subscriptions.filter(author=obj).exists()
 
-    def create(self, validated_data):
-        '''Создание нового User.'''
 
-        user = User(
-            email=validated_data["email"],
-            username=validated_data["username"],
-            first_name=validated_data["first_name"],
-            last_name=validated_data["last_name"],
-        )
-        user.set_password(validated_data["password"])
-        user.save()
-        return user
+class UserCreateSerializer(UserCreateSerializer):
+    """ Сериализатор создания пользователя """
+
+    class Meta:
+        model = User
+        fields = (
+            'email', 'username', 'first_name',
+            'last_name', 'password')
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -89,7 +89,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('id', 'tags', 'autor', 'ingredients', 'title', 'image',
+        fields = ('id', 'tags', 'author', 'ingredients', 'title', 'image',
                   'cooking_time', 'is_favorited', 'is_in_shopping_cart',
                   'description')
 

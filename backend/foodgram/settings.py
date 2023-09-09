@@ -116,8 +116,8 @@ REST_FRAMEWORK = {
 DJOSER = {
     "SERIALIZERS": {
         "user_create": "api.serializers.UserCreateSerializer",
-        "user": "api.serializers.UserSerializer",
-        "current_user": "api.serializers.UserSerializer",
+        "user": "api.serializers.UserCreateSerializer",
+        "current_user": "api.serializers.UserCreateSerializer",
     },
 
     "PERMISSIONS": {
@@ -126,6 +126,7 @@ DJOSER = {
     },
 
     "HIDE_USERS": False,
+    "LOGIN_FIELD": "email"
 }
 
 MAX_LENGTH_255 = 255
