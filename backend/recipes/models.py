@@ -35,14 +35,9 @@ class Ingredient(models.Model):
         max_length=settings.MAX_LENGTH_255,
         verbose_name='Название ингридиента'
     )
-    quantity = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
-        verbose_name='Единици измерения'
-    )
-    unit = models.CharField(
+    measurement_unit = models.DecimalField(
         max_length=settings.MAX_LENGTH_50,
-        verbose_name='Количество'
+        verbose_name='Единици измерения'
     )
 
     class Meta():
@@ -50,13 +45,13 @@ class Ingredient(models.Model):
         verbose_name_plural = 'Ингридиенты'
         constraints = [
             models.UniqueConstraint(
-                fields=['name', 'quantity'],
-                name='name_quantity_unique'
+                fields=['name', 'measurement_unit'],
+                name='name_measurement_unite'
             )
         ]
 
     def __str__(self):
-        return f'{self.name}, {self.quantity}'
+        return f'{self.name}, {self.measurement_unit}'
 
 
 class Recipe(models.Model):
